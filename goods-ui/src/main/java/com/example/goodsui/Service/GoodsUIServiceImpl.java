@@ -1,6 +1,9 @@
 package com.example.goodsui.Service;
 
 import com.example.goodscommon.pojo.Book;
+import com.example.goodscommon.vo.ResultVo;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,10 +31,19 @@ public class GoodsUIServiceImpl implements GoodsUIService {
     }
 
     @Override
-    public Book getBookDetail(Integer id) {
+    @HystrixCommand(
+            fallbackMethod = "fallBackDetail",commandProperties = {
+                    @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value = "1000")
+    }//降级响应设置时间
+    )
+    public ResultVo getBookDetail(Integer id) {
         Book forObject = restTemplate.getForObject("http://goods-provider/provider/detail/" + id, Book.class);
-        return forObject;
+        return ResultVo.ok(forObject);
     }
+    public ResultVo fallBackDetail(Integer id) {
+         return ResultVo.error("服务降级返回无内容");
+    }
+
 
     @Override
     public String addBook(Book book) {

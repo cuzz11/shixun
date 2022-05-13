@@ -1,6 +1,7 @@
 package com.example.goodsui.controller;
 
 import com.example.goodscommon.pojo.Book;
+import com.example.goodscommon.vo.ResultVo;
 import com.example.goodsui.Service.GoodsUIService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,14 +33,15 @@ public class GoodsUIController {
 
     @RequestMapping("/detail/{id}")
     @ResponseBody
-    public Book detail(@PathVariable("id")Integer id){
-        Book book = goodsUIService.getBookDetail(id);
+    public ResultVo detail(@PathVariable("id")Integer id){
+        ResultVo book = goodsUIService.getBookDetail(id);
         return book;
     }
     @PostMapping("/add")
     public String add(@RequestBody Book book){
         return goodsUIService.addBook(book);
     }
+
 
 }
 
