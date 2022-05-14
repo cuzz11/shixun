@@ -36,4 +36,5 @@ public class CustomerController {
         Customer customerDetail = customerDao.getCustomerDetail(id);
         return  ResultVo.ok(customerDetail);
     }
+
 }
